@@ -30,7 +30,7 @@ trainer = DPOTrainer(
 trainer.train()
 ```
 
-由于不同的偏好优化策略的在实际使用过程中只是在 loss 构造存在区别（当然少部分涉及到加载的数据集和模型），在$trl$有集成实现。
+由于不同的偏好优化策略的在实际使用过程中只是在 loss 构造存在区别（当然少部分涉及到加载的数据集和模型），在 $trl$ 有集成实现。
 具体参照 <https://github.com/huggingface/trl/blob/main/trl/trainer/dpo_trainer.py> line:1122-1200
 
 ---
@@ -49,14 +49,14 @@ RLHF 通常从一个通用的预训练 LM 开始，该 LM 在高质量数据集�
 
 ### Reward 阶段
 
-在第二阶段，用 $x$ 提示 $\pi^{SFT}$ 产生一对答案 $(y_1, y_2)\sim\pi^{SFT}$。通过人类标注，得到偏好标签 $y_w\succ y_l$ ，其中 $y_w$  表示首选 prompt， $y_l$ 表示非首选 prompt。
-通过静态数据集 $D=\left\{x^{i}, y_{w}^{i}, y_{l}^{i}\right\}_{i=1}^{N}$，可以将奖励模型  $ r_{\phi}(x,y)  $参数化，并通过极大似然估计参数。将问题定义为二元分类，有负对数似然损失： &#x20;
+在第二阶段，用 $x$ 提示 $\pi^{SFT}$ 产生一对答案 $(y_1, y_2)\sim\pi^{SFT}$。通过人类标注，得到偏好标签 $y_w\succ y_l$ ，其中 $y_w$  表示首选 `prompt`， $y_l$ 表示非首选 `prompt`。
+通过静态数据集 $D=\left\{x^{i}, y_{w}^{i}, y_{l}^{i}\right\}_{i=1}^{N}$ ，可以将奖励模型 $r_{\phi}(x,y)$ 参数化，并通过极大似然估计参数。将问题定义为二元分类，有负对数似然损失:
 
 $$
 \mathcal{L}_{R}\left(r_{\phi}, \mathcal{D}\right)=-\mathbb{E}_{\left(x, y_{w}, y_{l}\right) \sim \mathcal{D}}\left[\log \sigma\left(r_{\phi}\left(x, y_{w}\right)-r_{\phi}\left(x, y_{l}\right)\right)\right]
 $$
 
-其中 $\sigma$ 是 `sigmoid`  函数。奖励模型  $r_{\phi}(x,y)$通常由$ \pi^{SFT}  $进行初始化，并在最后一个 Transformer 层之后添加线性层，该层为奖励值生成单个标量预测。
+其中 $\sigma$ 是 `sigmoid`  函数。奖励模型 $r_{\phi}(x,y)$ 通常由 $\pi^{SFT}$ 进行初始化，并在最后一个 Transformer 层之后添加线性层，该层为奖励值生成单个标量预测。
 
 ### RL PPO 微调阶段
 
