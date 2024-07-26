@@ -1,5 +1,40 @@
 # PO stage
 
+没事干的时候瞎记的东西，错了很正常
+
+---
+
+code: <https://github.com/huggingface/trl/tree/main/trl/trainer>
+
+```python
+pip install trl 
+```
+
+then
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from trl import DPOTrainer
+
+# load model and dataset - dataset needs to be in a specific format
+model = 'model'
+tokenizer = 'tokenizer'
+# load trainer
+trainer = DPOTrainer(
+    model=model,
+    tokenizer=tokenizer,
+    train_dataset=dataset,
+    loss_type= "sigmoid", "hinge", "ipo", "bco_pair", "robust", "aot", "aot_pair", 
+)
+# train
+trainer.train()
+```
+
+由于不同的偏好优化策略的在实际使用过程中只是在 loss 构造存在区别（当然少部分涉及到加载的数据集和模型），在$trl$有集成实现。
+具体参照 <https://github.com/huggingface/trl/blob/main/trl/trainer/dpo_trainer.py> line:1122-1200
+
+---
+
 ## RLHF pipeline
 
 RLHF通常由3个阶段组成：
@@ -14,7 +49,7 @@ RLHF 通常从一个通用的预训练 LM 开始，该 LM 在高质量数据集�
 
 ### Reward 阶段
 
-在第二阶段，用 $x$ 提示 $\pi^{SFT}$ 产生一对答案 $  (y_1, y_2) \sim \pi^{SFT} $。通过人类标注，得到偏好标签 $y_w \succ y_l$ ，其中 $y_w$  表示首选 prompt， $y_l$ 表示非首选 prompt。
+在第二阶段，用 $x$ 提示 $\pi^{SFT}$ 产生一对答案 $(y_1, y_2)\sim\pi^{SFT}$。通过人类标注，得到偏好标签 $y_w\succ y_l$ ，其中 $y_w$  表示首选 prompt， $y_l$ 表示非首选 prompt。
 通过静态数据集 $D=\left\{x^{i}, y_{w}^{i}, y_{l}^{i}\right\}_{i=1}^{N}$，可以将奖励模型  $ r_{\phi}(x,y)  $参数化，并通过极大似然估计参数。将问题定义为二元分类，有负对数似然损失： &#x20;
 
 $$
@@ -40,8 +75,8 @@ $$
 
 Direct Preference Optimization: Your Language Model is Secretly a Reward Model
 
-- Paper:<https://arxiv.org/abs/2305.18290>
-- Code:<https://github.com/eric-mitchell/direct-preference-optimization>
+- Paper: <https://arxiv.org/abs/2305.18290>
+- Code: <https://github.com/eric-mitchell/direct-preference-optimization>
 
 **无需拟合奖励模型，也无需在微调期间从LM采样或执行显著的超参数调整**。
 与之前的 RLHF 方法不同，**DPO 绕过了奖励建模步骤，并使用偏好数据直接优化语言模型**。
@@ -76,6 +111,9 @@ $$
 
 ## IPO
 
+A General Theoretical Paradigm to Understand Learning from Human Preferences
+paper: <https://arxiv.org/abs/2310.12036>
+code: <>
 
 ---
 
