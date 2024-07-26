@@ -50,7 +50,7 @@ RLHF 通常从一个通用的预训练 LM 开始，该 LM 在高质量数据集�
 ### Reward 阶段
 
 在第二阶段，用 $x$ 提示 $\pi^{SFT}$ 产生一对答案 $(y_1, y_2)\sim\pi^{SFT}$。通过人类标注，得到偏好标签 $y_w\succ y_l$ ，其中 $y_w$  表示首选 `prompt`， $y_l$ 表示非首选 `prompt`。
-通过静态数据集 $D=\left\{x^i, y_w^i, y_l^i\right\}_{i=1}^N$ ，可以将奖励模型 $r_\phi(x,y)$ 参数化，并通过极大似然估计参数。将问题定义为二元分类，有负对数似然损失:
+通过静态数据集 $D=\left\{x^i, y_w^i, y_l^i\right\}_ {i=1}^N$ ，可以将奖励模型 $r_ \phi(x,y)$ 参数化，并通过极大似然估计参数。将问题定义为二元分类，有负对数似然损失:
 
 $$
 \mathcal{L}_{R}\left(r_{\phi}, \mathcal{D}\right)=-\mathbb{E}_{\left(x, y_{w}, y_{l}\right) \sim \mathcal{D}}\left[\log \sigma\left(r_{\phi}\left(x, y_{w}\right)-r_{\phi}\left(x, y_{l}\right)\right)\right]
